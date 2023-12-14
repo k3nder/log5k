@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.fusesource.jansi.AnsiConsole;
 
 import net.kender.logger.log5k.EXTRAS.LOGS;
 import net.kender.logger.log5k.conf.CustomLogger;
