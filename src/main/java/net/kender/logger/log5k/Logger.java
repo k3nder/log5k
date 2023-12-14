@@ -23,7 +23,6 @@ public class Logger {
      * @param msg message
      */
     public void WARN(Object msg){
-        AnsiConsole.systemInstall();
         Date date = new Date();
         SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm:ss"); 
         String hora = formatoHora.format(date);
@@ -43,7 +42,6 @@ public class Logger {
                 e.printStackTrace();
             }
         }
-        AnsiConsole.systemUninstall();
     }
     /**
      * 
