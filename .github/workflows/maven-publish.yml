@@ -6,8 +6,10 @@ on: [pull_request, push]
 
 
 jobs:
-  build:
 
+  build:
+    env:
+      POM_VERSION: s
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,7 +24,30 @@ jobs:
         distribution: 'temurin'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
+    - name: Instalar xmlstarlet
+      run: sudo apt-get install -y xmlstarlet
 
+    - name: Extraer versión del pom.xml
+      id: extract_version
+      run: |
+        # Extraer el valor del tag version del pom.xml
+        VERSION=$(xmlstarlet sel -t -v "/project/version" pom.xml)
+        echo "Versión del pom.xml: $VERSION"
+    
+    - name: Configurar variable de entorno con la versión
+      run: echo "POM_VERSION=${{ steps.extract_version.outputs.VERSION }}" >> $GITHUB_ENV
+
+    - name: Crear Release en GitHub
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          pom.xml
+          target/*.jar
+        tag_name: release
+        name: ${{ env.POM_VERSION }}
+        
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
     - name: Publish to GitHub Packages Apache Maven
       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
       env:
